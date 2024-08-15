@@ -76,22 +76,42 @@ Tech Stack
 *   **JavaScript**: The programming language used for test scripting.
     
 
-Setup and Installation
-----------------------
+## Setup and Installation
 
-1.  bashCopy codegit clone https://github.com/leaviki90/automation-store.git
-    
-2.  bashCopy codecd automation-store
-    
-3.  bashCopy codenpm install
-    
+1. **Clone the repository:**
 
-Running Tests
--------------
+    ```bash
+    git clone https://github.com/your-username/automation-store.git
+    ```
 
-*   bashCopy codenpm run cypress:openThis will open the Cypress Test Runner where you can select and execute your tests.
-    
-*   bashCopy codenpm run cypress:run
+2. **Navigate to the project directory:**
+
+    ```bash
+    cd automation-store
+    ```
+
+3. **Install dependencies:**
+
+    ```bash
+    npm install
+    ```
+
+## Running Tests
+
+1. **To run all tests:**
+
+    ```bash
+    npm run cypress:open
+    ```
+
+    This will open the Cypress Test Runner where you can select and execute your tests.
+
+2. **To run tests in headless mode:**
+
+    ```bash
+    npm run cypress:run
+    ```
+
     
 
 Test Cases
