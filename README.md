@@ -81,7 +81,7 @@ Tech Stack
 1. **Clone the repository:**
 
     ```bash
-    git clone https://github.com/your-username/automation-store.git
+    git clone https://github.com/leaviki90/automation-store.git
     ```
 
 2. **Navigate to the project directory:**
