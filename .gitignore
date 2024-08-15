@@ -1,1 +1,8 @@
+# Cypress directories
+cypress/screenshots/
+cypress/videos/
+
+# Node modules
 node_modules/
+
+
