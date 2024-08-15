@@ -136,4 +136,4 @@ Contributions are welcome! Please submit a pull request or open an issue to disc
 License
 -------
 
-This project is licensed under the MIT License. See the [MIT License](https://choosealicense.com/licenses/mit/) file for details.
+This project is licensed under the MIT License. See the [MIT License](/LICENSE.txt) file for details.
