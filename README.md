@@ -1,4 +1,4 @@
-Automation Store: Automation Testing with Cypress
+AutomationExercise.com: Automation Testing with Cypress
 ==========================================
 
 Project Overview
@@ -81,7 +81,7 @@ Tech Stack
 1. **Clone the repository:**
 
     ```bash
-    git clone https://github.com/leaviki90/automation-store.git
+    git clone https://github.com/leaviki90/AutomationExercise-Cypress.git
     ```
 
 2. **Navigate to the project directory:**
