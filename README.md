@@ -1,4 +1,4 @@
-Automation Store: Automation Testing with Cypress
+AutomationExercise.com: Automation Testing with Cypress
 ==========================================
 
 Project Overview
