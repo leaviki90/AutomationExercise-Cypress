@@ -1,0 +1,16 @@
+{
+
+        "email": "someemail@test.com", 
+        "password": "12345678",
+        "firstName": "Lea",
+        "lastName": "Lastname",
+        "company": "Somecompany",
+        "address": "Kržince bb",
+        "address2": "Kržince bb",
+        "state": "Serbia",
+        "city": "Niš bato",
+        "zipcode": "18000",
+        "mobileNumber": "0631234567"
+      
+      
+}
