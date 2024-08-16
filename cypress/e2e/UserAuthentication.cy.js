@@ -10,10 +10,12 @@ const state = "Serbia";
 const city = "Niš bato"; 
 const zipcode = "18000";
 const mobileNumber = "0631234567";
+const expectedURL = "https://www.automationexercise.com/";
+
 
 
 describe('User Authentication Suite', () => {
-  it('Register User', () => {
+  it('Register a new user', () => {
     cy.visit('https://www.automationexercise.com/');
     cy.url().should("include", "automationexercise");
     cy.title().should('eq', 'Automation Exercise');
@@ -24,8 +26,6 @@ describe('User Authentication Suite', () => {
     cy.xpath("//button[text()='Signup']").click();
     cy.xpath("//b[contains(text(), 'Enter Account Information')]").should("have.text", "Enter Account Information");
     cy.get("#id_gender2").check();
-    //cy.get("#name").type(firstName);
-    //cy.get("#email").type(email);
     cy.get("#password").type(password);
     cy.get("#days").select("30");
     cy.get("#months").select("December");
@@ -46,9 +46,28 @@ describe('User Authentication Suite', () => {
     cy.get("h2.title > b").should("contain", "Account Created!");
     cy.get("a[data-qa='continue-button']").click();
     cy.xpath(`//a[contains(text(), ' Logged in as ')]/b[contains(text(), '${firstName}')]`).should('be.visible');
+    cy.get("a[href='/logout']").click();
+    
+    
+    
+  })
+
+  it('Login with correct email and password', () => {
+    cy.visit('https://www.automationexercise.com/');
+    //implicit asertion
+    cy.url().should("eq", expectedURL);
+    cy.xpath("//img[@alt='Website for automation practice']").should("exist").and("be.visible");
+    cy.get("a[href='/login']").click();
+    cy.get(".login-form > h2").should("contain", "Login to your account").and("be.visible");
+    cy.get("input[data-qa='login-email']").type(email);
+    cy.get("input[placeholder='Password']").type(password);
+    cy.get("button[data-qa='login-button']").click();
+    cy.xpath(`//a[contains(text(), ' Logged in as ')]/b[contains(text(), '${firstName}')]`).should('be.visible');
     cy.get("a[href='/delete_account']").click();
     cy.get("h2.title > b").should("be.visible").and("contain", "Account Deleted!");
   })
+
+ // These two test cases are logically connected. The order of execution should not be changed.
 
   
 })
