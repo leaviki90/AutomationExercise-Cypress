@@ -14,8 +14,10 @@ Features
     *   Register a new user
         
     *   Login with correct email and password
+      
+    *   Login with incorrect email
         
-    *   Attempt to login with incorrect email and password
+    *   Login with incorrect password
         
     *   Logout functionality
         
