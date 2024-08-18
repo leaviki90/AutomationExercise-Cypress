@@ -52,7 +52,7 @@ describe('User Authentication Suite', function () {
     cy.get("#company").type(user.company);
     cy.get("#address1").type(user.address);
     cy.get("#address2").type(user.address2);
-    cy.get("#country").select("Australia");
+    cy.get("#country").select("Australia").should("have.value", "Australia");
     cy.get("#state").type(user.state);
     cy.get("#city").type(user.city);
     cy.get("#zipcode").type(user.zipcode);
@@ -278,3 +278,11 @@ describe('User Authentication Suite', function () {
 });
 
 
+// Otvori dropdown meni
+cy.get('.dropdown-toggle').click();
+
+// Izaberi opciju po tekstu
+cy.get('.dropdown-menu').contains('Option 2').click();
+
+// Ili izaberi opciju po klasi
+cy.get('.dropdown-item').eq(1).click(); // Druga opcija
