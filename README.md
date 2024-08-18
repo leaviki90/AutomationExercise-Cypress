@@ -19,9 +19,9 @@ Features
         
     *   Login with incorrect password
         
-    *   Logout functionality
+    *   Logout user
         
-    *   Register a user with an existing email
+    *   Register user with an existing email
         
 *   **Product and Cart Management Tests**:
     
