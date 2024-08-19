@@ -1,4 +1,4 @@
-const url = "https://www.automationexercise.com/";
+
 let user;
 let userEmail;
 
@@ -11,11 +11,29 @@ beforeEach(() => {
   });
 });
 
+
+afterEach(() => {
+  cy.visit('/'); // Navigate to home page to ensure user is at a known state
+  cy.get('body').then(($body) => {
+    // Check if the user is logged in
+    if ($body.find('a[href="/logout"]').length > 0) {
+      cy.get('a[href="/logout"]').click(); // Logout if necessary
+      cy.get('a[href="/logout"]').should('not.exist'); // Validate successful logout
+      cy.get('a[href="/login"]').should('exist').and('be.visible'); // Ensure login link is visible
+    }
+  });
+});
+
+
 describe('User Authentication Suite', function () {
   it('Register a new user', function () {
-    cy.visit(url);
+    cy.visit("/");
     cy.url().should("include", "automationexercise");
     cy.title().should('eq', 'Automation Exercise');
+
+    // Logout
+    //cy.get("a[href='/logout']").click();
+
 
     // Go to the Signup page
     cy.get("a[href='/login']").click();
@@ -64,8 +82,6 @@ describe('User Authentication Suite', function () {
     cy.get("a[data-qa='continue-button']").click();
     cy.xpath(`//a[contains(text(), ' Logged in as ')]/b[contains(text(), '${user.firstName}')]`).should('be.visible');
 
-    // Logout
-    //cy.get("a[href='/logout']").click();
 
     // Delete account
     cy.get("a[href='/delete_account']").click();
@@ -73,7 +89,7 @@ describe('User Authentication Suite', function () {
   });
 
   it('Login with correct email and password', function () {
-    cy.visit(url);
+    cy.visit("/");
 
     // API call to create a new user with valid data
     cy.request({
@@ -105,7 +121,7 @@ describe('User Authentication Suite', function () {
     });
 
     // Validate URL and page elements
-    cy.url().should("eq", url); // Implicit assertion
+    cy.url().should("eq", "https://www.automationexercise.com/"); // Implicit assertion
     cy.xpath("//img[@alt='Website for automation practice']").should("exist").and("be.visible");
 
     // Go to the Login page and login with valid credentials
@@ -124,7 +140,7 @@ describe('User Authentication Suite', function () {
   });
 
   it('Login with incorrect email', function () {
-    cy.visit(url);
+    cy.visit("/");
 
     // Validate URL and page elements
     cy.url().should("include", "automationexercise");
@@ -148,7 +164,7 @@ describe('User Authentication Suite', function () {
 
 
   it('Login with incorrect password', function () {
-    cy.visit(url);
+    cy.visit("/");
 
     // Validate URL and page elements
     cy.url().should("include", "automationexercise");
@@ -169,10 +185,10 @@ describe('User Authentication Suite', function () {
   });
 
   it('Logout user', function () {
-    cy.visit(url);
+    cy.visit("/");
 
-     // API call to create a new user with valid data
-     cy.request({
+    // API call to create a new user with valid data
+    cy.request({
       method: 'POST',
       url: 'https://automationexercise.com/api/createAccount',
       form: true, // Enables x-www-form-urlencoded encoding
@@ -213,10 +229,10 @@ describe('User Authentication Suite', function () {
     cy.get("input[data-qa='login-email']").type(user.email);
     cy.get("input[placeholder='Password']").type(user.password);
     cy.get("button[data-qa='login-button']").click();
-    
+
     // Validate successful login
     cy.xpath(`//a[contains(text(), ' Logged in as ')]/b[contains(text(), '${user.firstName}')]`).should('be.visible');
-    
+
     //Validate sussessful logout
     cy.get("a[href='/logout']").click();
     cy.get("a[href='/logout']").should("not.exist");
@@ -224,11 +240,11 @@ describe('User Authentication Suite', function () {
 
   });
 
-  it.only('Register user with an existing email', function () {
-    cy.visit(url);
+  it('Register user with an existing email', function () {
+    cy.visit("/");
 
-     // API call to create a new user with valid data
-     cy.request({
+    // API call to create a new user with valid data
+    cy.request({
       method: 'POST',
       url: 'https://automationexercise.com/api/createAccount',
       form: true, // Enables x-www-form-urlencoded encoding
@@ -264,7 +280,7 @@ describe('User Authentication Suite', function () {
     // Go to the Login page
     cy.get("a[href='/login']").click();
     cy.get(".signup-form h2").contains("New User Signup!"); // Assertion
-    
+
     //Entering some random name with an already registered email
     cy.xpath("//input[@placeholder='Name']").type("Višnjičica");
     cy.xpath("//input[@data-qa='signup-email']").type(user.email);
@@ -278,11 +294,4 @@ describe('User Authentication Suite', function () {
 });
 
 
-// Otvori dropdown meni
-cy.get('.dropdown-toggle').click();
 
-// Izaberi opciju po tekstu
-cy.get('.dropdown-menu').contains('Option 2').click();
-
-// Ili izaberi opciju po klasi
-cy.get('.dropdown-item').eq(1).click(); // Druga opcija
