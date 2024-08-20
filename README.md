@@ -25,7 +25,7 @@ Features
         
 *   **Product and Cart Management Tests**:
     
-    *   View all products and product detail pages
+    *   Verify All Products and Product Details page
         
     *   Search for products
         
