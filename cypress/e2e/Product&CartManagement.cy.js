@@ -1,6 +1,10 @@
 const productName = "winter";
 
 describe("Product and Cart Management", () => {
+    beforeEach(() => {
+        cy.clearCookies();
+        cy.clearLocalStorage();
+    });
     it("Verify All Products and Product Details page", () => {
         cy.visit("/");
 
@@ -9,7 +13,7 @@ describe("Product and Cart Management", () => {
         cy.title().should('eq', 'Automation Exercise');
         cy.xpath("//img[@alt='Website for automation practice']").should("exist").and("be.visible");
 
-        //Click on products and verify that All products page is opened 
+        //Click on products button and verify that All products page is opened 
         cy.get("a[href='/products']").click();
         cy.get("a[href='/products']").should("have.css", "color", "rgb(255, 165, 0)");
         cy.url().should("contain", "products");
@@ -81,4 +85,102 @@ describe("Product and Cart Management", () => {
     })
 
 
+    it.only("Add products to the cart", () => {
+
+        // Variables to store product IDs
+        let firstProductId;
+        let secondProductId;
+        let firstProductPrice;
+        let secondProductPrice;
+        const quantity = 1; // Quantity is 1 for both
+
+        // This function returns the total price
+        let calculateTotalPrice = (price, quantity) => {
+            return price * quantity;
+        }
+
+        //Go to homepage
+        cy.visit("/");
+
+        //Verify that home page is visible successfully
+        cy.url().should("include", "automationexercise");
+        cy.title().should('eq', 'Automation Exercise');
+        cy.xpath("//img[@alt='Website for automation practice']").should("exist").and("be.visible");
+
+        //Click on "Products" button  
+        cy.get("a[href='/products']").click();
+
+        //Hover over first product and click 'Add to cart'
+        cy.get(".product-overlay").first().trigger("mouseover", { force: true });
+        cy.get('.product-overlay').first().within(() => {
+            // Invokes `data-product-id` atribute from `a` element
+            cy.get('a').invoke('attr', 'data-product-id').then((id) => {
+                firstProductId = id;
+
+
+                // Invokes number from `<h2>` element
+                cy.get('h2').invoke('text').then((text) => {
+                    firstProductPrice = +text.replace(/[^0-9]/g, '');
+                    cy.log(`Product ID: ${firstProductId}, Price: ${firstProductPrice}`);
+                    cy.log(typeof firstProductPrice);
+                });
+            });
+        });
+        cy.get('.product-overlay').first().contains('Add to cart').click({ force: true });
+
+        //Click 'Continue Shopping' button
+        cy.get(".btn-success").click();
+
+        //Hover over second product and click 'Add to cart'
+        cy.get(".product-overlay").eq(1).trigger("mouseover", { force: true });
+        cy.get('.product-overlay').eq(1).within(() => {
+            cy.get("a").invoke('attr', 'data-product-id').then((id) => {
+                secondProductId = id;
+                // Invokes number from `<h2>` element
+                cy.get('h2').invoke('text').then((text) => {
+                    secondProductPrice = text.replace(/[^0-9]/g, '');
+                    cy.log(`Product ID: ${secondProductId}, Price: ${secondProductPrice}`);
+                });
+            });
+        });
+
+        cy.get('.product-overlay').eq(1).contains('Add to cart').click({ force: true });
+
+        //Click 'View Cart' button
+        cy.get(".modal-body a").click();
+
+        //Verify both products are added to Cart
+        cy.get('.cart_info').within(() => {
+            cy.get(`a[data-product-id='${firstProductId}']`).should('exist');
+            cy.get(`a[data-product-id='${secondProductId}']`).should('exist');
+        });
+
+        // Verify prices, quantity and total price for the first product
+        cy.get('tbody tr').each(($tr) => {
+            const rowId = $tr.attr('id');
+
+            if (rowId && rowId.includes(firstProductId)) {
+                cy.wrap($tr).within(() => {
+                    cy.get('.cart_price').should('contain', `Rs. ${firstProductPrice}`);
+                    cy.get('.cart_quantity').should('contain', quantity.toString());
+                    cy.get('.cart_total_price').should('contain', `Rs. ${calculateTotalPrice(firstProductPrice, quantity)}`);
+
+                });
+            }
+        });
+
+        // Verify prices, quantity and total price for the second product
+        cy.get('tbody tr').each(($tr) => {
+            const rowId = $tr.attr('id');
+
+            if (rowId && rowId.includes(secondProductId)) {
+                cy.wrap($tr).within(() => {
+                    cy.get('.cart_price').should('contain', `Rs. ${secondProductPrice}`);
+                    cy.get('.cart_quantity').should('contain', quantity.toString());
+                    cy.get('.cart_total_price').should('contain', `Rs. ${calculateTotalPrice(secondProductPrice, quantity)}`);
+                });
+            }
+        });
+    });
 })
+
