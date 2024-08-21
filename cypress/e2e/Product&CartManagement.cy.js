@@ -85,7 +85,7 @@ describe("Product and Cart Management", () => {
     })
 
 
-    it.only("Add products to the cart", () => {
+    it("Add products to the cart", () => {
 
         // Variables to store product IDs
         let firstProductId;
@@ -182,5 +182,10 @@ describe("Product and Cart Management", () => {
             }
         });
     });
-})
+});
+
+
+
+
+
 

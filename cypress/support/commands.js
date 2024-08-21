@@ -24,5 +24,26 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+// cypress/support/commands.js
+
+// cypress/support/commands.js
+
+// Custom command to get the iFrame's body, accepts an iframe selector as parameter
+Cypress.Commands.add('getIframeBody', (selector) => {
+    // Get the iframe element
+    cy.get(selector).then($iframe => {
+        // Access the body element within the iframe
+        const body = $iframe.contents().find('body');
+        
+        // Ensure the body is visible before proceeding
+        cy.wrap(body).should('be.visible');
+        
+        return cy.wrap(body);
+    });
+});
+
+
+
+
 /// <reference types="Cypress" />
 /// <reference types="cypress-xpath" />
