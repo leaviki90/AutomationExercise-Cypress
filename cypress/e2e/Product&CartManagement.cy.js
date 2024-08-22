@@ -182,6 +182,37 @@ describe("Product and Cart Management", () => {
             }
         });
     });
+
+    it.only("Verify product quantity in the cart", () => {
+        const productId = 1;
+        const quantity = 4;
+        //Go to homepage
+        cy.visit("/");
+
+        //Verify that home page is visible successfully
+        cy.url().should("include", "automationexercise");
+        cy.title().should('eq', 'Automation Exercise');
+        cy.xpath("//img[@alt='Website for automation practice']").should("exist").and("be.visible");
+
+        //Click 'View Product' for any product on home page
+        cy.get(`a[href='/product_details/${productId}']`).click(); 
+
+        //Verify product detail is opened
+        cy.url().should('include', `/product_details/${productId}`);
+
+        //Increase quantity to 4
+        cy.get("#quantity").clear().type(quantity);
+
+        //Click 'Add to cart' button
+        cy.get(".cart").click();
+
+        //Click 'View Cart' button
+        cy.get("p[class='text-center'] a").click();
+
+        //Verify that product is displayed in cart page with exact quantity
+        cy.get(".cart_quantity button").should("contain", quantity);
+
+    })
 });
 
 
