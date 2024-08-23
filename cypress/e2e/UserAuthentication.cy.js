@@ -3,6 +3,13 @@ let user;
 let userEmail;
 
 beforeEach(() => {
+  cy.visit('/'); //homepage url
+
+  // Validate homepage URL and page elements
+  cy.url().should("include", "automationexercise");
+  cy.title().should('eq', 'Automation Exercise');
+  cy.xpath("//img[@alt='Website for automation practice']").should("exist").and("be.visible");
+
   // Load user details from the fixture file before each test
   cy.fixture('userDetails').then((userData) => {
     user = userData;
@@ -27,13 +34,6 @@ afterEach(() => {
 
 describe('User Authentication Suite', function () {
   it('Register a new user', function () {
-    cy.visit("/");
-    cy.url().should("include", "automationexercise");
-    cy.title().should('eq', 'Automation Exercise');
-
-    // Logout
-    //cy.get("a[href='/logout']").click();
-
 
     // Go to the Signup page
     cy.get("a[href='/login']").click();
@@ -52,7 +52,8 @@ describe('User Authentication Suite', function () {
     // Selecting radio buttons
     cy.get("#id_gender2").check().should("be.checked");
     cy.get("#id_gender1").should("not.be.checked");
-
+    
+    //Entering password and selecting date
     cy.get("#password").type(user.password);
     cy.get("#days").select("30");
     cy.get("#months").select("December");
@@ -82,15 +83,13 @@ describe('User Authentication Suite', function () {
     cy.get("a[data-qa='continue-button']").click();
     cy.xpath(`//a[contains(text(), ' Logged in as ')]/b[contains(text(), '${user.firstName}')]`).should('be.visible');
 
-
     // Delete account
     cy.get("a[href='/delete_account']").click();
     cy.get("h2.title > b").should("be.visible").and("contain", "Account Deleted!");
   });
 
   it('Login with correct email and password', function () {
-    cy.visit("/");
-
+  
     // API call to create a new user with valid data
     cy.request({
       method: 'POST',
@@ -120,10 +119,6 @@ describe('User Authentication Suite', function () {
       expect(response.status).to.eq(200);
     });
 
-    // Validate URL and page elements
-    cy.url().should("eq", "https://www.automationexercise.com/"); // Implicit assertion
-    cy.xpath("//img[@alt='Website for automation practice']").should("exist").and("be.visible");
-
     // Go to the Login page and login with valid credentials
     cy.get("a[href='/login']").click();
     cy.get(".login-form > h2").should("contain", "Login to your account").and("be.visible");
@@ -140,13 +135,7 @@ describe('User Authentication Suite', function () {
   });
 
   it('Login with incorrect email', function () {
-    cy.visit("/");
-
-    // Validate URL and page elements
-    cy.url().should("include", "automationexercise");
-    cy.title().should('eq', 'Automation Exercise');
-    cy.xpath("//img[@alt='Website for automation practice']").should("exist").and("be.visible");
-
+    
     // Go to the Login page
     cy.get("a[href='/login']").click();
     cy.get(".login-form > h2").should("contain", "Login to your account").and("be.visible");
@@ -164,7 +153,7 @@ describe('User Authentication Suite', function () {
 
 
   it('Login with incorrect password', function () {
-    cy.visit("/");
+    
 
     // Validate URL and page elements
     cy.url().should("include", "automationexercise");
@@ -185,7 +174,7 @@ describe('User Authentication Suite', function () {
   });
 
   it('Logout user', function () {
-    cy.visit("/");
+    
 
     // API call to create a new user with valid data
     cy.request({
@@ -241,7 +230,7 @@ describe('User Authentication Suite', function () {
   });
 
   it('Register user with an existing email', function () {
-    cy.visit("/");
+    
 
     // API call to create a new user with valid data
     cy.request({
@@ -271,11 +260,6 @@ describe('User Authentication Suite', function () {
       // Validate the response
       expect(response.status).to.eq(200);
     });
-
-    // Validate URL and page elements
-    cy.url().should("include", "automationexercise");
-    cy.title().should('eq', 'Automation Exercise');
-    cy.xpath("//img[@alt='Website for automation practice']").should("exist").and("be.visible");
 
     // Go to the Login page
     cy.get("a[href='/login']").click();

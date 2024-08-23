@@ -1,18 +1,15 @@
-const productName = "winter";
-
 describe("Product and Cart Management", () => {
     beforeEach(() => {
         cy.clearCookies();
         cy.clearLocalStorage();
+        cy.visit("/");
+         //Verify that home page is visible successfully
+         cy.url().should("include", "automationexercise");
+         cy.title().should('eq', 'Automation Exercise');
+         cy.xpath("//img[@alt='Website for automation practice']").should("exist").and("be.visible");
     });
     it("Verify All Products and Product Details page", () => {
-        cy.visit("/");
-
-        // Validate URL and page elements
-        cy.url().should("include", "automationexercise");
-        cy.title().should('eq', 'Automation Exercise');
-        cy.xpath("//img[@alt='Website for automation practice']").should("exist").and("be.visible");
-
+        
         //Click on products button and verify that All products page is opened 
         cy.get("a[href='/products']").click();
         cy.get("a[href='/products']").should("have.css", "color", "rgb(255, 165, 0)");
@@ -43,13 +40,9 @@ describe("Product and Cart Management", () => {
 
 
     it("Search products", () => {
-        cy.visit("/");
-
-        // Validate URL and page elements
-        cy.url().should("include", "automationexercise");
-        cy.title().should('eq', 'Automation Exercise');
-        cy.xpath("//img[@alt='Website for automation practice']").should("exist").and("be.visible");
-
+        
+        const productName = "winter";
+        
         //Click on products and verify that All products page is opened 
         cy.get("a[href='/products']").click();
         cy.get("a[href='/products']").should("have.css", "color", "rgb(255, 165, 0)");
@@ -99,14 +92,6 @@ describe("Product and Cart Management", () => {
             return price * quantity;
         }
 
-        //Go to homepage
-        cy.visit("/");
-
-        //Verify that home page is visible successfully
-        cy.url().should("include", "automationexercise");
-        cy.title().should('eq', 'Automation Exercise');
-        cy.xpath("//img[@alt='Website for automation practice']").should("exist").and("be.visible");
-
         //Click on "Products" button  
         cy.get("a[href='/products']").click();
 
@@ -129,7 +114,7 @@ describe("Product and Cart Management", () => {
         cy.get('.product-overlay').first().contains('Add to cart').click({ force: true });
 
         //Click 'Continue Shopping' button
-        cy.get(".btn-success").click();
+        cy.get(".close-modal").click();
 
         //Hover over second product and click 'Add to cart'
         cy.get(".product-overlay").eq(1).trigger("mouseover", { force: true });
@@ -183,19 +168,12 @@ describe("Product and Cart Management", () => {
         });
     });
 
-    it.only("Verify product quantity in the cart", () => {
+    it("Verify product quantity in the cart", () => {
         const productId = 1;
         const quantity = 4;
-        //Go to homepage
-        cy.visit("/");
-
-        //Verify that home page is visible successfully
-        cy.url().should("include", "automationexercise");
-        cy.title().should('eq', 'Automation Exercise');
-        cy.xpath("//img[@alt='Website for automation practice']").should("exist").and("be.visible");
-
+        
         //Click 'View Product' for any product on home page
-        cy.get(`a[href='/product_details/${productId}']`).click(); 
+        cy.get(`a[href='/product_details/${productId}']`).click();
 
         //Verify product detail is opened
         cy.url().should('include', `/product_details/${productId}`);
@@ -212,6 +190,40 @@ describe("Product and Cart Management", () => {
         //Verify that product is displayed in cart page with exact quantity
         cy.get(".cart_quantity button").should("contain", quantity);
 
+    })
+
+    it("Remove products from the cart", () => {
+        let productName;
+         //Add products to cart (3 products)
+         //first product
+         cy.get(".product-image-wrapper").first().scrollIntoView({duration:2000}); //scroll
+         cy.get(".product-image-wrapper").first().find(".product-overlay .add-to-cart").click({force: true});//click on product
+         cy.get(".close-modal").click(); //continue
+         //second product
+         cy.get(".product-image-wrapper").eq(1).find(".product-overlay .add-to-cart").click({force: true});//click on product
+         cy.get(".product-image-wrapper").eq(1).find(".product-overlay p").then(($p) => {
+            productName = $p.text();
+        });
+         cy.get(".close-modal").click();//continue
+         //third product
+         cy.get(".product-image-wrapper").eq(31).scrollIntoView(); //scroll
+         cy.get(".product-image-wrapper").eq(31).find(".product-overlay .add-to-cart").click({force: true});//click on product
+         cy.get(".close-modal").click();//continue
+
+         //Click "Cart" button
+         cy.get("a[href='/view_cart']").first().click();
+
+         //Verify that cart page is displayed
+         cy.url().should("include", "view_cart");
+         cy.get(".btn.btn-default.check_out").should("be.visible");
+
+         //Click 'X' button corresponding to particular product (second)
+         cy.get("tbody > tr").eq(1).within(() => {
+            cy.get(".cart_delete").click();
+         })
+         
+         //Verify that product is removed from the cart
+         cy.get("tbody").should("not.have.text", productName);
     })
 });
 
