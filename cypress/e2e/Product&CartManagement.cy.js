@@ -1,4 +1,4 @@
-import { selectCategory, verifyCategoryAndSubCategory } from '../support/CategoryHelpers';
+import { selectCategory, verifyCategoryAndSubCategory, selectBrand, checkBrandProductsVisibility } from '../support/CategoryHelpers';
 
 describe("Product and Cart Management", () => {
     beforeEach(() => {
@@ -241,6 +241,23 @@ describe("Product and Cart Management", () => {
         selectCategory('#Men', "Tshirts");
         verifyCategoryAndSubCategory('category_products/3');
     });
+
+
+    it("View brand-specific products", () => {
+        //Click on 'Products' button
+        cy.get("a[href='/products']").click();
+
+        //Verify that Brands are visible on left side bar
+        cy.get(".left-sidebar > .brands_products").should("be.visible");
+
+        //Selects a brand by its name, clicks it if found, and stores the cleaned brand name for later use.
+        selectBrand("H&M");
+        //Check that title contains selected brend name and visibility of its products
+        checkBrandProductsVisibility();
+        selectBrand("Polo");
+        checkBrandProductsVisibility();
+
+    })
 
 });
 

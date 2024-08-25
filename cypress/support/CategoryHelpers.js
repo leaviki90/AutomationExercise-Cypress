@@ -46,3 +46,37 @@ export function verifyCategoryAndSubCategory(expectedCategoryPath) {
         });
     });
 }
+
+//View and add brand-specific products to the cart - test case
+
+//Selects a brand by its name, clicks it if found, and stores the cleaned brand name for later use.
+export function selectBrand(brand) {
+    // Select the element containing the brand name and filter by text
+    cy.get('.brands_products .brands-name a')
+        .contains(brand)
+        .then(($brend) => {
+
+            // Ensure the link is visible and click on it
+            cy.wrap($brend)
+                .should('be.visible')
+                .click();
+
+            // Save the cleaned brand name for later use
+            const brandName = $brend.text().trim().replace(/\(\d+\)/, '');
+            cy.wrap(brandName).as('selectedBrand');
+        });
+}
+
+
+// Check that title contains selected brend name and visibility of its products
+export function checkBrandProductsVisibility() {
+    cy.get('@selectedBrand').then((selectedBrand) => { //get the alias
+        //check that title contains selected brand name
+        cy.get(".features_items > .title")
+            .should('be.visible')
+            .and('contain.text', selectedBrand);
+    });
+
+    cy.get(".features_items .productinfo").should('be.visible');
+
+}
