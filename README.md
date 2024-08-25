@@ -37,7 +37,7 @@ Features
         
     *   View category-specific products
         
-    *   View and add brand-specific products to the cart
+    *   View brand-specific products
         
     *   Add products to the cart from recommended items
         
