@@ -42,8 +42,49 @@ Cypress.Commands.add('getIframeBody', (selector) => {
     });
 });
 
+//custom command for clicking on link using label
+
+Cypress.Commands.add("clickLink", (label) => {
+    cy.get("a").contains(label).click();
+})
 
 
+//custom command for overwriting contains() method's case sensitivity
+Cypress.Commands.overwriteQuery(
+    "contains",
+    function (contains, filter, text, userOptions = {}) {
+  
+      // This is parameter resolution from Cypress v12.7.0 source
+      if (Cypress._.isRegExp(text)) {
+        // .contains(filter, text)
+        // Do nothing
+      } else if (Cypress._.isObject(text)) {
+        // .contains(text, userOptions)
+        userOptions = text
+        text = filter
+        filter = ''
+      } else if (Cypress._.isUndefined(text)) {
+        // .contains(text)
+        text = filter
+        filter = ''
+      }
+  
+      userOptions.matchCase = false;
+  
+      let contains0 = contains.bind(this)    // this line fixes the error
+  
+      return contains0(filter, text, userOptions)
+    }
+  )
+
+
+
+//custom command for login
+// Cypress.Commands.add("loginApp", (email, password) => {
+//     cy.get("input[data-qa='login-email']").type(email);
+//     cy.get("input[placeholder='Password']").type(password);
+//     cy.get("button[data-qa='login-button']").click();
+// })
 
 /// <reference types="Cypress" />
 /// <reference types="cypress-xpath" />

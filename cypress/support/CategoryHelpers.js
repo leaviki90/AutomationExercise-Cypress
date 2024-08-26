@@ -80,3 +80,32 @@ export function checkBrandProductsVisibility() {
     cy.get(".features_items .productinfo").should('be.visible');
 
 }
+
+
+
+//Add products to the cart from recommended items - test case
+
+//This function locates a product by its name within the "recommended items",
+//extracts its data-product-id attribute, saves it as an alias, and clicks on the product's link.
+export function clickOnRecommendedItem(recommendedItemName) {
+    cy.get(".recommended_items").within(() => {
+        cy.contains(recommendedItemName).should('be.visible').parents('.productinfo').within(() => {
+            cy.get('a').invoke('attr', 'data-product-id').then((productId) => {
+                // Sačuvaj productId kao alias
+                cy.wrap(productId).as('selectedProductId');
+                // Klikni na link
+                cy.get(`a[data-product-id="${productId}"]`).click();
+            });
+        });
+    });
+}
+
+
+//This function uses the previously saved data-product-id alias to verify
+//if the corresponding product exists in the table with the ID product-{selectedProduct}.
+export function verifyRecommendedItem(){
+    cy.get("@selectedProductId").then((selectedProduct) => {
+       cy.get("tbody > tr").should("have.id", `product-${selectedProduct}`);
+    })
+}
+

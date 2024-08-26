@@ -1,4 +1,7 @@
-import { selectCategory, verifyCategoryAndSubCategory, selectBrand, checkBrandProductsVisibility } from '../support/CategoryHelpers';
+import {
+    selectCategory, verifyCategoryAndSubCategory, selectBrand, checkBrandProductsVisibility, clickOnRecommendedItem,
+    verifyRecommendedItem
+} from '../support/CategoryHelpers';
 
 describe("Product and Cart Management", () => {
     beforeEach(() => {
@@ -257,6 +260,24 @@ describe("Product and Cart Management", () => {
         selectBrand("Polo");
         checkBrandProductsVisibility();
 
+    })
+
+
+    it("Add products to the cart from recommended items", () => {
+        //Scroll to bottom of page
+        cy.get("#footer").scrollIntoView({ duration: 2000 });
+
+        //Verify 'RECOMMENDED ITEMS' are visible
+        cy.get(".recommended_items > .title").should("be.visible");
+
+        //Click on 'Add To Cart' on Recommended product
+        clickOnRecommendedItem("Winter Top");
+
+        //Click 'View Cart' button
+        cy.get(".modal-body a").click();
+
+        //Verify that product is displayed in cart page
+        verifyRecommendedItem();
     })
 
 });
