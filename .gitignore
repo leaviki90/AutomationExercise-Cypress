@@ -1,6 +1,7 @@
 # Cypress directories
 cypress/screenshots/
 cypress/videos/
+cypress/reports/
 
 # Node modules
 node_modules/
