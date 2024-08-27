@@ -5,6 +5,9 @@ let userEmail;
 beforeEach(() => {
   cy.visit('/'); //homepage url
 
+     cy.clearCookies();
+        cy.clearLocalStorage();
+
   // Validate homepage URL and page elements
   cy.url().should("include", "automationexercise");
   cy.title().should('eq', 'Automation Exercise');
@@ -39,7 +42,7 @@ describe('User Authentication Suite', function () {
   it('Register a new user', function () {
 
     // Go to the Signup page
-    cy.get("a[href='/login']").click();
+    cy.get("a[href='/login']").first().click();
     cy.get(".signup-form h2").contains("New User Signup!"); // Assertion
     cy.xpath("//input[@placeholder='Name']").type(user.firstName);
     cy.xpath("//input[@data-qa='signup-email']").type(user.email);
@@ -91,7 +94,7 @@ describe('User Authentication Suite', function () {
     cy.get("h2.title > b").should("be.visible").and("contain", "Account Deleted!");
   });
 
-  it.only('Login with correct email and password',() => {
+  it('Login with correct email and password',() => {
   
     cy.fixture('userDetails').then((user) => {
       cy.createUserProfile(user); // Use custom command to create profile via API
@@ -153,35 +156,9 @@ describe('User Authentication Suite', function () {
 
   it('Logout user', function () {
     
-
-    // API call to create a new user with valid data
-    cy.request({
-      method: 'POST',
-      url: 'https://automationexercise.com/api/createAccount',
-      form: true, // Enables x-www-form-urlencoded encoding
-      body: {
-        name: user.firstName,
-        email: user.email,
-        password: user.password,
-        title: "Mrs",
-        birth_date: "30",
-        birth_month: "December",
-        birth_year: "1990",
-        firstname: user.firstName,
-        lastname: user.lastName,
-        company: user.company,
-        address1: user.address,
-        address2: user.address2,
-        country: "Australia",
-        zipcode: user.zipcode,
-        state: user.state,
-        city: user.city,
-        mobile_number: user.mobileNumber,
-      }
-    }).then((response) => {
-      // Validate the response
-      expect(response.status).to.eq(200);
-    });
+    cy.fixture('userDetails').then((user) => {
+      cy.createUserProfile(user); // Use custom command to create profile via API
+   
 
     // Validate URL and page elements
     cy.url().should("include", "automationexercise");
@@ -205,39 +182,15 @@ describe('User Authentication Suite', function () {
     cy.get("a[href='/logout']").should("not.exist");
     cy.get("a[href='/login']").should("exist").and("be.visible");
 
+    })
+
   });
 
   it('Register user with an existing email', function () {
     
-
-    // API call to create a new user with valid data
-    cy.request({
-      method: 'POST',
-      url: 'https://automationexercise.com/api/createAccount',
-      form: true, // Enables x-www-form-urlencoded encoding
-      body: {
-        name: user.firstName,
-        email: user.email,
-        password: user.password,
-        title: "Mrs",
-        birth_date: "30",
-        birth_month: "December",
-        birth_year: "1990",
-        firstname: user.firstName,
-        lastname: user.lastName,
-        company: user.company,
-        address1: user.address,
-        address2: user.address2,
-        country: "Australia",
-        zipcode: user.zipcode,
-        state: user.state,
-        city: user.city,
-        mobile_number: user.mobileNumber,
-      }
-    }).then((response) => {
-      // Validate the response
-      expect(response.status).to.eq(200);
-    });
+    cy.fixture('userDetails').then((user) => {
+      cy.createUserProfile(user); // Use custom command to create profile via API
+   
 
     // Go to the Login page
     cy.get("a[href='/login']").click();
@@ -251,6 +204,7 @@ describe('User Authentication Suite', function () {
     //Validating error message
     cy.get("input[value='signup']+p").should("contain", "Email Address already exist!").and("be.visible");
   });
+})
 
   // Tests are independent; the order of execution does not matter.
 });

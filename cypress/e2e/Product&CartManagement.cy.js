@@ -280,7 +280,7 @@ describe("Product and Cart Management", () => {
         verifyRecommendedItem();
     })
 
-    it.only("Search products and verify cart contents after login", () => {
+    it("Search products and verify cart contents after login", () => {
         const productName = "Sleeves Top";
 
         // Click on "Products" button and verify that "All products page" is opened 
