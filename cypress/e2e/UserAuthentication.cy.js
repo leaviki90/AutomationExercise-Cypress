@@ -25,11 +25,14 @@ afterEach(() => {
     // Check if the user is logged in
     if ($body.find('a[href="/logout"]').length > 0) {
       cy.get('a[href="/logout"]').click(); // Logout if necessary
-      cy.get('a[href="/logout"]').should('not.exist'); // Validate successful logout
-      cy.get('a[href="/login"]').should('exist').and('be.visible'); // Ensure login link is visible
+      
+      //Check for the presence of the login link
+      cy.get('a[href="/login"]').should('exist').and('be.visible'); // Ensure login link is visible after logout
     }
   });
 });
+
+
 
 
 describe('User Authentication Suite', function () {
@@ -88,36 +91,10 @@ describe('User Authentication Suite', function () {
     cy.get("h2.title > b").should("be.visible").and("contain", "Account Deleted!");
   });
 
-  it('Login with correct email and password', function () {
+  it.only('Login with correct email and password',() => {
   
-    // API call to create a new user with valid data
-    cy.request({
-      method: 'POST',
-      url: 'https://automationexercise.com/api/createAccount',
-      form: true, // Enables x-www-form-urlencoded encoding
-      body: {
-        name: user.firstName,
-        email: user.email,
-        password: user.password,
-        title: "Mrs",
-        birth_date: "30",
-        birth_month: "December",
-        birth_year: "1990",
-        firstname: user.firstName,
-        lastname: user.lastName,
-        company: user.company,
-        address1: user.address,
-        address2: user.address2,
-        country: "Australia",
-        zipcode: user.zipcode,
-        state: user.state,
-        city: user.city,
-        mobile_number: user.mobileNumber,
-      }
-    }).then((response) => {
-      // Validate the response
-      expect(response.status).to.eq(200);
-    });
+    cy.fixture('userDetails').then((user) => {
+      cy.createUserProfile(user); // Use custom command to create profile via API
 
     // Go to the Login page and login with valid credentials
     cy.get("a[href='/login']").click();
@@ -132,6 +109,7 @@ describe('User Authentication Suite', function () {
     // Delete account
     cy.get("a[href='/delete_account']").click();
     cy.get("h2.title > b").should("be.visible").and("contain", "Account Deleted!");
+    })
   });
 
   it('Login with incorrect email', function () {

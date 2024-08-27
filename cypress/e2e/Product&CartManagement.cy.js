@@ -282,50 +282,15 @@ describe("Product and Cart Management", () => {
 
     it.only("Search products and verify cart contents after login", () => {
         const productName = "Sleeves Top";
-        //Click on products button and verify that All products page is opened 
+
+        // Click on "Products" button and verify that "All products page" is opened 
         cy.get("a[href='/products']").click();
         cy.get("a[href='/products']").should("have.css", "color", "rgb(255, 165, 0)");
         cy.url().should("contain", "products");
-        cy.title().should("contain", "Automation Exercise - All Products")
+        cy.title().should("contain", "Automation Exercise - All Products");
 
-        //Enter product name in search input and click search button
-        cy.get("#search_product").type(productName);
-        cy.get("#search_product").should("have.value", productName);
-        cy.get("#submit_search").click();
-
-        //Verify 'SEARCHED PRODUCTS' is visible
-        cy.get(".title.text-center").should("exist").and("be.visible").and("contain", "Searched Products");
-
-
-
-        // Verify all the products related to search are visible and add them to the cart
-        cy.get("body").then($body => {
-            if ($body.find(".productinfo").length > 0) {
-                // If products exist, the each loop starts
-                cy.get(".productinfo").should("be.visible").each(($product, index) => {
-                    cy.wrap($product).within(() => {
-                        // Verify the product name contains the search term, converting both to lowercase
-                        cy.get("p").invoke("text").then((text) => {
-                            const actualProductName = text.toLowerCase().trim(); // Convert to lowercase and trim spaces
-                            const searchTerm = productName.toLowerCase().trim(); // Convert search term to lowercase and trim spaces
-
-                            expect(actualProductName).to.include(searchTerm);
-                        });
-
-                        // Click on "Add to cart" button
-                        cy.get('.add-to-cart').click({ force: true });
-                    });
-
-                    // Close modal if it appears after adding a product to the cart
-                    cy.get('.modal-footer button').contains('Continue Shopping').click({ force: true });
-                });
-
-                cy.get(".productinfo").should('have.length.greaterThan', 0);
-            } else {
-                // If products don't exist, send message
-                cy.log("No such product");
-            }
-        });
+        // Use custom command to search and add products to the cart
+        cy.searchAndAddProductsToCart(productName);
 
         // Click 'Cart' button and verify that products are visible in the cart
         cy.get("a[href='/view_cart']").first().click({ force: true });
@@ -333,50 +298,22 @@ describe("Product and Cart Management", () => {
             cy.wrap($product).should('be.visible');
         });
 
-        //Click 'Signup / Login' button and submit login details
+        // Click 'Signup / Login' button and submit login details
         cy.fixture('userDetails').then((user) => {
-            cy.get("a[href='/login']").first().click();
-            // API call to create a new user with valid data
-            cy.request({
-                method: 'POST',
-                url: 'https://automationexercise.com/api/createAccount',
-                form: true, // Enables x-www-form-urlencoded encoding
-                body: {
-                    name: user.firstName,
-                    email: user.email,
-                    password: user.password,
-                    title: "Mrs",
-                    birth_date: "30",
-                    birth_month: "December",
-                    birth_year: "1990",
-                    firstname: user.firstName,
-                    lastname: user.lastName,
-                    company: user.company,
-                    address1: user.address,
-                    address2: user.address2,
-                    country: "Australia",
-                    zipcode: user.zipcode,
-                    state: user.state,
-                    city: user.city,
-                    mobile_number: user.mobileNumber,
-                }
-            }).then((response) => {
-                // Validate the response
-                expect(response.status).to.eq(200);
-            });
+            cy.createUserProfile(user); // Use custom command to create profile via API
 
             // Go to the Login page and login with valid credentials
-            cy.get("a[href='/login']").click();
+            cy.get("a[href='/login']").first().click();
             cy.get(".login-form > h2").should("contain", "Login to your account").and("be.visible");
             cy.get("input[data-qa='login-email']").type(user.email);
             cy.get("input[placeholder='Password']").type(user.password);
             cy.get("button[data-qa='login-button']").click();
-        })
+        });
 
-        //Again, go to Cart page
+        // Again, go to "Cart" page
         cy.get("a[href='/view_cart']").first().click({ force: true });
 
-        //Verify that those products are visible in cart after login as well
+        // Verify that those products are visible in cart after login as well
         cy.get("a[href='/view_cart']").first().click({ force: true });
         cy.get('.cart_description').each(($product) => {
             cy.wrap($product).should('be.visible');

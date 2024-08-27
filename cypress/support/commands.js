@@ -86,5 +86,68 @@ Cypress.Commands.overwriteQuery(
 //     cy.get("button[data-qa='login-button']").click();
 // })
 
+
+
+// Command for creating a user profile via API
+Cypress.Commands.add('createUserProfile', (user) => {
+  cy.request({
+      method: 'POST',
+      url: 'https://automationexercise.com/api/createAccount',
+      form: true,
+      body: {
+          name: user.firstName,
+          email: user.email,
+          password: user.password,
+          title: "Mrs",
+          birth_date: "30",
+          birth_month: "December",
+          birth_year: "1990",
+          firstname: user.firstName,
+          lastname: user.lastName,
+          company: user.company,
+          address1: user.address,
+          address2: user.address2,
+          country: "Australia",
+          zipcode: user.zipcode,
+          state: user.state,
+          city: user.city,
+          mobile_number: user.mobileNumber,
+      }
+  }).then((response) => {
+      expect(response.status).to.eq(200);
+  });
+});
+
+
+// Command for searching products and adding them to cart
+Cypress.Commands.add('searchAndAddProductsToCart', (productName) => {
+  // Enter product name in search input and click search button
+  cy.get("#search_product").type(productName);
+  cy.get("#search_product").should("have.value", productName);
+  cy.get("#submit_search").click();
+
+  // Verify 'SEARCHED PRODUCTS' is visible
+  cy.get(".title.text-center").should("exist").and("be.visible").and("contain", "Searched Products");
+
+  // Verify all the products related to search are visible and add them to the cart
+  cy.get("body").then($body => {
+      if ($body.find(".productinfo").length > 0) {
+          cy.get(".productinfo").should("be.visible").each(($product) => {
+              cy.wrap($product).within(() => {
+                  cy.get("p").invoke("text").then((text) => {
+                      const actualProductName = text.toLowerCase().trim();
+                      const searchTerm = productName.toLowerCase().trim();
+                      expect(actualProductName).to.include(searchTerm);
+                  });
+                  cy.get('.add-to-cart').click({ force: true });
+              });
+              cy.get('.modal-footer button').contains('Continue Shopping').click({ force: true });
+          });
+      } else {
+          cy.log("No such product");
+      }
+  });
+});
+
 /// <reference types="Cypress" />
 /// <reference types="cypress-xpath" />
