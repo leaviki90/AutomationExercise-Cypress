@@ -149,5 +149,84 @@ Cypress.Commands.add('searchAndAddProductsToCart', (productName) => {
   });
 });
 
+//add product to the cart
+Cypress.Commands.add("addToCart", (productName) => {
+  cy.contains(".productinfo", productName).find("a").click();
+});
+
+
+//click on "Continue Shopping" button
+Cypress.Commands.add("clickOnContinueShopping", () => {
+  cy.get("button.close-modal").click();
+  })
 /// <reference types="Cypress" />
 /// <reference types="cypress-xpath" />
+
+//Click on "Cart" button
+Cypress.Commands.add("clickOnCart", () => {
+  cy.get("a[href='/view_cart']").first().click();
+  })
+
+
+//Verify that cart page is displayed
+Cypress.Commands.add("verifyCartPage", () => {
+  cy.url().should("include", "view_cart");
+  cy.get(".btn.btn-default.check_out").should("be.visible");
+})
+
+//Click Proceed To Checkout
+Cypress.Commands.add("proceedToCheckout", () => {
+  cy.get(".btn.btn-default.check_out").click();
+})
+
+//Click 'Register / Login' button
+Cypress.Commands.add("registerLoginButton", () => {
+  cy.get(".modal-body a").click();
+})
+
+
+
+Cypress.Commands.add('registerNewUser', (user) => {
+  // Go to the Signup page
+  //cy.get("a[href='/login']").first().click();
+  cy.get(".signup-form h2").contains("New User Signup!"); // Assertion
+  cy.xpath("//input[@placeholder='Name']").type(user.firstName);
+  cy.xpath("//input[@data-qa='signup-email']").type(user.email);
+  cy.xpath("//button[text()='Signup']").click();
+
+  // Enter account information
+  cy.xpath("//b[contains(text(), 'Enter Account Information')]").should("have.text", "Enter Account Information");
+
+  // Visibility of radio buttons
+  cy.get("#id_gender1").should("be.visible");
+  cy.get("#id_gender2").should("be.visible");
+
+  // Selecting radio buttons
+  cy.get("#id_gender2").check().should("be.checked");
+  cy.get("#id_gender1").should("not.be.checked");
+
+  // Entering password and selecting date
+  cy.get("#password").type(user.password);
+  cy.get("#days").select("30");
+  cy.get("#months").select("December");
+  cy.get("#years").select("1990");
+
+  // Visibility of the checkbox
+  cy.get("#newsletter").should("be.visible");
+  cy.get("#optin").should("be.visible");
+
+  // Selecting all checkboxes at once
+  cy.get("input[type='checkbox']").check().should("be.checked");
+
+  cy.get("#first_name").type(user.firstName);
+  cy.get("#last_name").type(user.lastName);
+  cy.get("#company").type(user.company);
+  cy.get("#address1").type(user.address);
+  cy.get("#address2").type(user.address2);
+  cy.get("#country").select("Australia").should("have.value", "Australia");
+  cy.get("#state").type(user.state);
+  cy.get("#city").type(user.city);
+  cy.get("#zipcode").type(user.zipcode);
+  cy.get("#mobile_number").type(user.mobileNumber);
+  cy.get("button[data-qa='create-account']").click();
+});
