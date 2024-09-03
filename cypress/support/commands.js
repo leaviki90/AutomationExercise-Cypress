@@ -187,8 +187,6 @@ Cypress.Commands.add("registerLoginButton", () => {
 
 
 Cypress.Commands.add('registerNewUser', (user) => {
-  // Go to the Signup page
-  //cy.get("a[href='/login']").first().click();
   cy.get(".signup-form h2").contains("New User Signup!"); // Assertion
   cy.xpath("//input[@placeholder='Name']").type(user.firstName);
   cy.xpath("//input[@data-qa='signup-email']").type(user.email);
@@ -230,3 +228,28 @@ Cypress.Commands.add('registerNewUser', (user) => {
   cy.get("#mobile_number").type(user.mobileNumber);
   cy.get("button[data-qa='create-account']").click();
 });
+
+//Verify address - accepts id (for delivery, or for billing address)
+Cypress.Commands.add("verifyAddress", (id, user) => {
+  cy.get(id).within(() => {
+    cy.contains('.address_firstname', `${user.firstName} ${user.lastName}`);
+    cy.contains('.address_address1', `${user.address}`);
+    cy.contains('.address_city', `${user.city} ${user.state} ${user.zipcode}`);
+    cy.contains('.address_country_name', "Australia"); 
+    cy.contains('.address_phone', `${user.mobileNumber}`);
+  });
+});
+
+
+//Click on "Place Order"
+Cypress.Commands.add("clickOnPlaceOrder", () => {
+  cy.get("a.check_out").click();
+})
+
+
+//delete Account and verify the message 
+Cypress.Commands.add("deleteAccount", () => {
+  cy.get("a[href='/delete_account']").click();
+  cy.get("h2.title > b").should("be.visible").and("contain", "Account Deleted!");
+})
+
