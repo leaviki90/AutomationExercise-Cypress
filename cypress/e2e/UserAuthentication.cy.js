@@ -109,8 +109,7 @@ describe('User Authentication Suite', function () {
     cy.xpath(`//a[contains(text(), ' Logged in as ')]/b[contains(text(), '${user.firstName}')]`).should('be.visible');
 
     // Delete account
-    cy.get("a[href='/delete_account']").click();
-    cy.get("h2.title > b").should("be.visible").and("contain", "Account Deleted!");
+    cy.deleteAccount();
     })
   });
 

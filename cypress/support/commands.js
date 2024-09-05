@@ -253,3 +253,8 @@ Cypress.Commands.add("deleteAccount", () => {
   cy.get("h2.title > b").should("be.visible").and("contain", "Account Deleted!");
 })
 
+
+//Click on Signup / Login button
+Cypress.Commands.add("loginSignupButtonClick", () => {
+  cy.get("a[href='/login']").click();
+})
