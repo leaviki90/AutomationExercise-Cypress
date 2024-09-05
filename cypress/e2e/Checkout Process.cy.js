@@ -190,7 +190,7 @@ describe("Checkout Process", () => {
         cy.get("a[data-qa = 'continue-button']").click();
     })
 
-    it.only("Place order: login before checkout", () => {
+    it("Place order: login before checkout", () => {
         
         //Click 'Signup / Login' buttonž
         cy.loginSignupButtonClick();
@@ -269,5 +269,49 @@ describe("Checkout Process", () => {
         //Click 'Delete Account' button & Verify 'ACCOUNT DELETED!' and click 'Continue' button
         cy.deleteAccount();
         cy.get("a[data-qa = 'continue-button']").click();
+    })
+
+    it.only("Verify address details on the checkout page", () => {
+
+        //Click 'Signup / Login' button
+        cy.loginSignupButtonClick();
+
+        //Fill all details in Signup and create account
+        cy.registerNewUser(user);
+
+        //Verify 'ACCOUNT CREATED!' and click 'Continue' button
+        cy.get("h2.title > b").should("contain", "Account Created!");
+        cy.get("a[data-qa='continue-button']").click();
+
+        //Verify ' Logged in as username' at top
+        cy.xpath(`//a[contains(text(), ' Logged in as ')]/b[contains(text(), '${user.firstName}')]`).should('be.visible');
+
+        //Add products to Cart
+        cy.addToCart("Blue Top");  //Add product to cart
+        cy.clickOnContinueShopping();  //Close modal by clicking on Continue Shopping
+        cy.addToCart("Men Tshirt");
+        cy.clickOnContinueShopping();
+        cy.addToCart("Sleeveless Dress");
+        cy.clickOnContinueShopping();
+
+        //Click on "Cart" button
+        cy.clickOnCart();
+
+        //Verify that cart page is displayed
+        cy.verifyCartPage();
+
+        //Click Proceed To Checkout
+        cy.proceedToCheckout();
+
+        //Verify that the delivery address is same address filled at the time registration of account
+        //Verify that the billing address is same address filled at the time registration of account
+        cy.fixture('userDetails.json').then((data) => {
+            cy.verifyAddress("#address_delivery", data);  //delivery address
+            cy.verifyAddress("#address_invoice", data); //billing address
+        });
+
+         //Click 'Delete Account' button & Verify 'ACCOUNT DELETED!' and click 'Continue' button
+         cy.deleteAccount();
+         cy.get("a[data-qa = 'continue-button']").click();
     })
 })
