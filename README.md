@@ -45,11 +45,11 @@ Features
         
 *   **Checkout Process Tests**:
     
-    *   Place an order while registering during checkout
+    *   Place order: register while checkout
         
-    *   Place an order after registering before checkout
+    *   Place order: register before checkout
         
-    *   Place an order by logging in before checkout
+    *   Place order: login before checkout
         
     *   Verify address details on the checkout page
         
