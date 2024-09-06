@@ -110,4 +110,37 @@ describe("Miscellaneous Tests", () => {
         cy.get(".alert-success.alert").should("not.be.hidden").and("have.text", "You have been successfully subscribed!");
     })
 
+    it.only("Add review on product", () => {
+
+        const name = "Zmaj";
+        const email = "somerandom@email.com";
+        const review = "Some random text";
+
+        //Click on 'Products' button
+        cy.get("a[href='/products']").first().click();
+
+        //Verify user is navigated to ALL PRODUCTS page successfully
+        cy.url().should("include", "products"); //check url
+        cy.get("a[href='/products']").first().should('have.css', 'color', 'rgb(255, 165, 0)');//check active link
+        cy.get(".title").should("be.visible").and("have.text", "All Products"); //check the title
+
+        //Click on 'View Product' button
+        cy.viewProduct("Summer White Top");
+
+        //Verify 'Write Your Review' is visible
+        cy.get("a[href='#reviews']").should("be.visible").and("contain", "Write Your Review");
+
+        //Enter name, email and review
+        cy.get("#name").type(name);
+        cy.get("#email").type(email);
+        cy.get("#review").type(review);
+
+        //Click 'Submit' button
+        cy.get("#button-review").click();
+
+        //Verify success message 'Thank you for your review.'
+        cy.get("#review-section .alert-success.alert span").should("be.visible").and("have.text", "Thank you for your review.");
+
+    })
+
 })

@@ -258,3 +258,9 @@ Cypress.Commands.add("deleteAccount", () => {
 Cypress.Commands.add("loginSignupButtonClick", () => {
   cy.get("a[href='/login']").click();
 })
+
+
+//Click on view product button
+Cypress.Commands.add("viewProduct", (productName) => {
+  cy.contains(".product-image-wrapper", productName).find("a").last().click();
+});
