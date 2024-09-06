@@ -159,4 +159,20 @@ describe("Miscellaneous Tests", () => {
 
     })
 
+    it("Verify scroll up and down functionality without using the 'Arrow' button", () => {
+        
+        //Scroll down page to bottom
+        cy.scrollTo("bottom",{duration: 3000});
+
+        //Verify 'SUBSCRIPTION' is visible
+        cy.get(".single-widget h2").should("be.visible").and("have.text", "Subscription");
+
+        //Scroll up page to top
+        cy.scrollTo("top", {duration: 3000});
+
+        //Verify that page is scrolled up and 'Full-Fledged practice website for Automation Engineers' text is visible on screen
+        cy.get('.active > :nth-child(1) > h2').contains("Full-Fledged practice website for Automation Engineers").should("be.visible");
+
+    })
+
 })
