@@ -72,7 +72,7 @@ describe("Miscellaneous Tests", () => {
     })
 
     it("Verify subscription functionality on the home page", () => {
-     
+
         const email = "somerandom@email.com";
         //Scroll down to footer
         cy.get("#footer").scrollIntoView();
@@ -90,7 +90,24 @@ describe("Miscellaneous Tests", () => {
     })
 
     it("Verify subscription functionality on the cart page", () => {
-        
+
+        const email = "somerandom@email.com";
+
+        //Click 'Cart' button
+        cy.clickOnCart();
+
+        //Scroll down to footer
+        cy.get("#footer").scrollIntoView();
+
+        //Verify text 'SUBSCRIPTION'
+        cy.get(".single-widget h2").should("be.visible").and("have.text", "Subscription");
+
+        //Enter email address in input and click arrow button
+        cy.get("#susbscribe_email").type(email);
+        cy.get("#subscribe").click();
+
+        //Verify success message 'You have been successfully subscribed!' is visible
+        cy.get(".alert-success.alert").should("not.be.hidden").and("have.text", "You have been successfully subscribed!");
     })
 
 })
