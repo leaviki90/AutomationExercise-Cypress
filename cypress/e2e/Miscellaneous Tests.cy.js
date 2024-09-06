@@ -110,7 +110,7 @@ describe("Miscellaneous Tests", () => {
         cy.get(".alert-success.alert").should("not.be.hidden").and("have.text", "You have been successfully subscribed!");
     })
 
-    it.only("Add review on product", () => {
+    it("Add review on product", () => {
 
         const name = "Zmaj";
         const email = "somerandom@email.com";
@@ -140,6 +140,22 @@ describe("Miscellaneous Tests", () => {
 
         //Verify success message 'Thank you for your review.'
         cy.get("#review-section .alert-success.alert span").should("be.visible").and("have.text", "Thank you for your review.");
+
+    })
+
+    it("Verify scroll up and down functionality using the 'Arrow' button", () => {
+
+        //Scroll down page to bottom
+        cy.scrollTo("bottom",{duration: 3000});
+
+        //Verify 'SUBSCRIPTION' is visible
+        cy.get(".single-widget h2").should("be.visible").and("have.text", "Subscription");
+
+        //Click on arrow at bottom right side to move upward
+        cy.get("#scrollUp").click();
+
+        //Verify that page is scrolled up and 'Full-Fledged practice website for Automation Engineers' text is visible on screen
+        cy.get("h2").contains("Full-Fledged practice website for Automation Engineers").should("be.visible");
 
     })
 
