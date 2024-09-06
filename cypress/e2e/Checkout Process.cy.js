@@ -315,7 +315,7 @@ describe("Checkout Process", () => {
         cy.get("a[data-qa = 'continue-button']").click();
     })
 
-    it.only("Download an invoice after placing an order", () => {
+    it("Download an invoice after placing an order", () => {
 
         //The file path for the downloaded invoice
         const filePath = 'cypress/downloads/invoice.txt';
