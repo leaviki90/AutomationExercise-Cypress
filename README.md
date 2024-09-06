@@ -61,7 +61,9 @@ Features
         
     *   Verify the Test Cases page
         
-    *   Verify subscription functionality on the home and cart pages
+    *   Verify subscription functionality on the home page
+      
+    *   Verify subscription functionality on the cart page
         
     *   Add a review on a product
         
