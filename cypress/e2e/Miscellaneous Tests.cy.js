@@ -59,4 +59,16 @@ describe("Miscellaneous Tests", () => {
         cy.get("a").contains("Home").should('have.css', 'color', 'rgb(255, 165, 0)');
     })
 
+    it("Verify the Test Cases page", () => {
+
+        //Click on 'Test Cases' button
+        cy.get("a[href='/test_cases']").first().click();
+
+        //Verify user is navigated to test cases page successfully
+        cy.url().should("include", "test_cases"); //check url
+        cy.get("a[href='/test_cases']").first().should('have.css', 'color', 'rgb(255, 165, 0)');//check active link
+        cy.get(".title").should("be.visible").and("have.text", "Test Cases"); //check the title
+
+    })
+
 })
